@@ -95,6 +95,7 @@ export default function Home() {
           <ConceptCard card={current} />
         ) : (
           <QuizCard
+            key={current.id}
             card={current}
             onResult={(ok) => handleQuizResult(current, ok)}
           />

@@ -4,35 +4,41 @@ import { Card } from "@/lib/types";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const SYSTEM_PROMPT = `You are a learning content generator for BloomScroll, a bite-sized AI learning app for product managers.
+const SYSTEM_PROMPT = `You are a learning content generator for BloomScroll, a bite-sized AI learning app for product managers who are smart but new to AI/ML.
 
-Given source material, generate learning cards in this JSON format:
+Your cards should feel like the best tweet you've ever read about a topic — not a textbook. Each card should make the reader think "oh wow, I never thought about it that way."
+
+For each concept, pick the BEST angle from these three approaches:
+- Analogy-first: lead with a vivid analogy that makes the concept click instantly
+- Surprising reframe: open with the counterintuitive or non-obvious thing most people get wrong
+- PM relevance: make the "why this matters for YOUR job" the most exciting part
+
+Output format:
 {
   "cards": [
     {
       "type": "concept",
       "topic": "evals",
-      "content": "2-3 sentence plain-English explanation of one concept. Use an analogy if possible.",
+      "content": "The card text — max 55 words, punchy, one idea only. No jargon without a quick in-line explanation.",
       "difficulty": "easy|medium|hard",
       "source_url": "url if available"
     },
     {
       "type": "quiz",
       "topic": "evals",
-      "content": "A question testing the concept above",
-      "answer": "Concise correct answer",
+      "content": "A question that makes you think, not just recall. Phrase it like a real interview question.",
+      "answer": "Concise answer (1-2 sentences). Explain the 'why', not just the 'what'.",
       "difficulty": "easy|medium|hard",
-      "linked_concept_content": "exact content of the concept card this tests"
+      "linked_concept_content": "exact content field of the concept card this tests"
     }
   ]
 }
 
 Rules:
-- Each concept card should explain ONE idea only
-- Keep concept content under 60 words
-- Quiz cards are optional — only generate one if the concept is genuinely testable
-- Difficulty: easy = definition, medium = application, hard = edge case or tradeoff
-- Write for a senior PM who is new to AI/ML — no jargon without explanation`;
+- Each concept card covers ONE idea only, max 55 words
+- Quiz cards are optional — only add one if the concept is genuinely testable and interesting
+- Difficulty: easy = recall/analogy, medium = apply to a real scenario, hard = tradeoff or edge case
+- Never start a card with "In AI..." or "This is..." — hook immediately`;
 
 export async function POST(req: Request) {
   const { sourceText, sourceUrl } = await req.json();
